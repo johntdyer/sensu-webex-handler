@@ -27,7 +27,7 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/bluele/slack"
+  name = "github.com/jbogarin/go-cisco-webex-teams"
 
 [[constraint]]
   name = "github.com/sensu/sensu-go"
