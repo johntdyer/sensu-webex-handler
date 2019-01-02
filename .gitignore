@@ -1,2 +1,3 @@
 vendor/
+dist/
 sensu-webex-handler
