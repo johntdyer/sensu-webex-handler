@@ -8,26 +8,26 @@ builds:
     binary: bin/sensu-webex-handler
     goos:
       #-android
-      - darwin
-      - dragonfly
-      - freebsd
+      # - darwin
+      # - dragonfly
+      # - freebsd
       - linux
-      - netbsd
+      # - netbsd
       #- openbsd # TODO: fix up gopsutil to not require CGO
       #- plan9
-      - solaris
-      - windows
+      # - solaris
+      # - windows
     goarch:
       - amd64
-      - 386
-      - arm
-      - arm64
-      - ppc64
-      - ppc64le
-      - mips
-      - mipsle
-      - mips64
-      - mips64le
+      # - 386
+      # - arm
+      # - arm64
+      # - ppc64
+      # - ppc64le
+      # - mips
+      # - mipsle
+      # - mips64
+      # - mips64le
     goarm:
       - 5
       - 6
