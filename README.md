@@ -3,6 +3,8 @@
 The Sensu webex handler is a [Sensu Event Handler][1] that sends event data to
 a configured webex channel.   This plugin was mostly copied from the [Sensu slack handler][2] and repurposed for [Webex Teams][4].
 
+![screenshot](image/example.png?raw=true "Example")
+
 ## Installation
 
 Download the latest version of the sensu-webex-handler from [releases][2],
