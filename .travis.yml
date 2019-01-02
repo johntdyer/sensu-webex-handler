@@ -1,0 +1,38 @@
+language: go
+go:
+- 1.10.x
+
+
+install:
+- go get gopkg.in/alecthomas/gometalinter.v1
+- go get github.com/gordonklaus/ineffassign
+- go get github.com/jgautheron/goconst/cmd/goconst
+- go get github.com/kisielk/errcheck
+- go get github.com/golang/lint/golint
+- go get github.com/golang/dep/cmd/dep
+- dep ensure
+script:
+- gometalinter.v1 --vendor --disable-all --enable=vet --enable=golint --enable=ineffassign
+  --enable=goconst --tests ./...
+
+before_script: 
+- echo "REPO $TRAVIS_REPO_SLUG TAG ${TRAVIS_TAG}"
+
+before_deploy:
+- go get github.com/goreleaser/goreleaser
+deploy:
+  - #goreleaser
+    provider: script
+    script: goreleaser
+    skip_cleanup: true
+    on:
+      tags: true
+
+after_deploy:  
+  - travis/generate-sha512sum.sh
+  - cat "dist/sha512_file"
+  - travis/github-release-upload.sh github_api_token=$GITHUB_TOKEN repo_slug="$TRAVIS_REPO_SLUG" tag="${TRAVIS_TAG}" filename="dist/$(cat dist/sha512_file)"
+
+env:
+  global:
+    secure: AAAAB3NzaC1yc2EAAAADAQABAAACAQDd8VD1c3Mno+WzqOC/4a59ersotUdAqOsQCdql8eVDlv49PWkFEUh/cKVmhnooGO68O+Qt3dcP7uqEo2DZtgxfTshd0JpT/IV6KLGqJbg8VWIbikY4AIlNZEov4PDjvGsyRogYfxbx5F71pr5TiYbvkyN4qYDZKJMmqfD1VcA5FYXrLg18SR3fuly+thfIQtD8yv9rHTMfk9KfcwoNbyLgmU28U6ZUHm0tz6x+UN9LT39oCSZAp3MvyLZvEmFZhyzSnfylhTzICi05F1gpPzD0CAvLHbtPGse7igXu1fupNEuM9f01g+uY/gsHNuxcgL026RcMd5EYvbr0F8chVrrZRTc7Emgd2QSqVGWZb0jVnIAF09FsIzHgt2nSQRkkEhNP80skOiDi3VthQ8b4XWO4hJ4bTm1C6DQGUN80Y8xtlNFYpHBA7GNV+zwIoTOGSb0vKP/786cVHx2E+hYZkP+03QXdv0zyeXevCS6s4TSKGyHv9apRg+6JZ1nGm6f1MPHB5OLEf582xi5RAkKtFGpKxDHyTv1KhcySzgOvbQTW488O2jPMUuTHAevp6HQvyOFe2OMYIyhu1xMK5rTBKzRMwMG8WH8Yf+9WqBJf2mmgqPuAX16KyXao9x/iyaFD9VnVyINqxxCO+LiTFGPvOU6uUNGm3Tm+HznOo7s13ueVEQ==
