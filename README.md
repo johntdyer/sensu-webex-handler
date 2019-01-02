@@ -1,23 +1,23 @@
-# Sensu Go Slack Handler
+# Sensu Go webex Handler
 
-The Sensu Slack handler is a [Sensu Event Handler][1] that sends event data to
-a configured Slack channel.
+The Sensu webex handler is a [Sensu Event Handler][1] that sends event data to
+a configured webex channel.   This plugin was mostly copied from the [Sensu slack handler][2] and repurposed for [Webex Teams][4].
 
 ## Installation
 
-Download the latest version of the sensu-slack-handler from [releases][2],
+Download the latest version of the sensu-webex-handler from [releases][2],
 or create an executable script from this source.
 
-From the local path of the slack-handler repository:
+From the local path of the webex-handler repository:
 ```
-go build -o /usr/local/bin/sensu-slack-handler main.go
+go build -o /usr/local/bin/sensu-webex-handler main.go
 ```
 
 ## Configuration
 
 Example Sensu Go handler definition:
 
-slack-handler.json
+webex-handler.json
 
 ```json
 {
@@ -25,11 +25,11 @@ slack-handler.json
     "type": "Handler",
     "metadata": {
         "namespace": "default",
-        "name": "slack"
+        "name": "webex"
     },
     "spec": {
         "type": "pipe",
-        "command": "sensu-slack-handler --channel '#general' --timeout 20 --username 'sensu' --webhook-url 'https://www.webhook-url-for-slack.com'",
+        "command": "sensu-webex-handler --token abc123 --room-id 'ABCDEFGHIJKLMNOP123' --timeout 20 \\",
         "timeout": 30,
         "filters": [
             "is_incident"
@@ -38,7 +38,7 @@ slack-handler.json
 }
 ```
 
-`sensuctl create -f slack-handler.json`
+`sensuctl create -f webex-handler.json`
 
 Example Sensu Go check definition:
 
@@ -58,7 +58,7 @@ Example Sensu Go check definition:
         "publish": true,
         "interval": 10,
         "handlers": [
-            "slack"
+            "webex"
         ]
     }
 }
@@ -69,19 +69,20 @@ Example Sensu Go check definition:
 Help:
 
 ```
-The Sensu Go Slack handler for notifying a channel
+The Sensu Go webex handler for notifying a channel
 
 Usage:
-  sensu-slack-handler [flags]
+  sensu-webex-handler [flags]
 
 Flags:
-  -c, --channel string       The channel to post messages to (default "#general")
-  -h, --help                 help for handler-slack
-  -i, --icon-url string      A URL to an image to use as the user avatar (default "http://s3-us-west-2.amazonaws.com/sensuapp.org/sensu.png")
+  -c, --room-id string       The space to post messages to, can also be a users email if you want to send directly to a person vs a space
+  -t, --token string         Api token to use
+  -h, --help                 help for handler-webex
   -t, --timeout int          The amount of seconds to wait before terminating the handler (default 10)
-  -u, --username string      The username that messages will be sent as (default "sensu")
-  -w, --webhook-url string   The webhook url to send messages to
+  
 ```
 
 [1]: https://docs.sensu.io/sensu-go/5.0/reference/handlers/#how-do-sensu-handlers-work
-[2]: https://github.com/sensu/sensu-slack-handler/releases
+[2]: https://github.com/johntdyer/sensu-webex-handler/releases
+[3]: https://github.com/sensu/sensu-slack-handler
+[4]: https://developer.webex.com

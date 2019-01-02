@@ -47,7 +47,7 @@ func configureRootCommand() *cobra.Command {
 		"room-id",
 		"r",
 		"",
-		"The room id to send messages to")
+		"The space to post messages to, can also be a users email if you want to send directly to a person vs a space")
 
 	cmd.Flags().StringVarP(&token,
 		"token",
