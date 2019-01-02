@@ -237,7 +237,7 @@ func getTemplateNew(condition string, event *types.Event) string {
 		eventColor, //messageColor(event),
 		messageStatus(event),
 		event.Entity.Name,
-		event.Entity.GetObjectMeta().Name,
+		event.Check.GetObjectMeta().Name,
 		emoji,
 		getSortedHistory(event),
 		formattedEventAction(event),

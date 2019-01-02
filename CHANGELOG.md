@@ -7,12 +7,12 @@ Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Released
 
-## [0.0.1] - 2019-01-03
+## [0.0.3] - 2019-01-03
 
-### Added
+### Fixed
 
-- Initial release
-
+- used entity name instead of check name for output
+   
 ## [0.0.2] - 2019-01-03
 
 ### Changed
@@ -20,3 +20,9 @@ Versioning](http://semver.org/spec/v2.0.0.html).
 - updated git ignore
 - updated readme
 - updated gep log
+- 
+## [0.0.1] - 2019-01-03
+
+### Added
+
+- Initial release
