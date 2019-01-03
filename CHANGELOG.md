@@ -7,6 +7,12 @@ Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Released
 
+## [0.0.5] - 2019-01-04
+
+### Changes
+
+* Moved example json files into contrib dir to clean up dir tree
+
 ## [0.0.4] - 2019-01-03
 
 ### Fixed
