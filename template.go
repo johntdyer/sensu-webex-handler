@@ -69,9 +69,9 @@ const inccidentTemplate = `{
                   "fillMode": "RepeatVertically",
                   "horizontalAlignment": "Center"
                 }
-              },
-              {{if (ne .MessageStatus "Resolved") }}
-              {
+              }
+
+              ,{
                 "type": "Column",
                 "width": "stretch",
                 "items": [{
@@ -84,7 +84,9 @@ const inccidentTemplate = `{
                       "facts": [{
                           "title": "**Entity:** ",
                           "value": "[{{.EntityName}}](foo)"
-                        },
+                        }
+                        {{if (ne .MessageStatus "Resolved") }}
+                        ,
                         {
                           "title": "Time",
                           "value": "{{.CheckExecutionTime}}"
@@ -93,15 +95,18 @@ const inccidentTemplate = `{
                           "title": "History",
                           "value": "{{.History}}"
                         }
+                        {{end}}
                       ]
                     }]
                   }]
                 }]
               }
-              {{end}}
+
             ],
             "height": "stretch"
-          },
+          }
+          {{if (ne .MessageStatus "Resolved") }}
+          ,
           {
             "type": "Container",
             "items": [{
@@ -125,6 +130,7 @@ const inccidentTemplate = `{
               }]
             }]
           }
+             {{end}}
         ]
       }
     }

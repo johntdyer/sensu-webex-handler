@@ -94,48 +94,48 @@
     "timeout": 0,
     "duration": 0.010849143,
     "executed": 1542667666,
-    "history": [{
+    "history": [
+      {
         "status": 1,
         "executed": 1542667666
       },
       {
         "status": 0,
         "executed": 1522100915
-      }, {
+      },
+      {
         "status": 0,
         "executed": 1522300915
       },
-
       {
         "status": 0,
         "executed": 1522100915
-      }, {
+      },
+      {
         "status": 0,
         "executed": 1522300915
       },
-
-
       {
         "status": 0,
         "executed": 1522200915
-      }, {
+      },
+      {
         "status": 0,
         "executed": 1522300915
       },
-
-
       {
         "status": 0,
         "executed": 1522400915
-      }, {
+      },
+      {
         "status": 1,
         "executed": 1522500915
       },
-
       {
         "status": 0,
         "executed": 1522600915
-      }, {
+      },
+      {
         "status": 0,
         "executed": 1522700915
       }

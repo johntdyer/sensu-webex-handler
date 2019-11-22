@@ -1,14 +1,10 @@
 package main
 
 import (
-	"encoding/json"
-	"io/ioutil"
-	"os"
 	"testing"
 
 	"github.com/sensu/sensu-go/types"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestFormattedEventAction(t *testing.T) {
@@ -94,31 +90,4 @@ func TestStateToEmojifier(t *testing.T) {
 	assert.Equal("unknown", color)
 	assert.Equal("Unknown", state)
 	assert.Equal("⁉️", icon)
-}
-
-func TestMain(t *testing.T) {
-	assert := assert.New(t)
-	file, _ := ioutil.TempFile(os.TempDir(), "sensu-handler-webex-")
-	defer func() {
-		_ = os.Remove(file.Name())
-	}()
-
-	event := types.FixtureEvent("entity1", "check1")
-	eventJSON, _ := json.Marshal(event)
-	_, err := file.WriteString(string(eventJSON))
-	require.NoError(t, err)
-	require.NoError(t, file.Sync())
-	_, err = file.Seek(0, 0)
-	require.NoError(t, err)
-	stdin = file
-
-	requestReceived := true
-
-	oldArgs := os.Args
-	os.Args = []string{"webex"} ///, "-w", apiStub.URL}
-	defer func() { os.Args = oldArgs }()
-
-	main()
-
-	assert.True(requestReceived)
 }
