@@ -211,8 +211,8 @@ func getTemplateNew(event *types.Event) string {
 		Emoji                string
 		History              []string
 		FormattedEventAction string
-    FormattedMessage     string
-    BucketName           string
+		FormattedMessage     string
+		BucketName           string
 	}{
 		event.Check.GetOutput(),
 		time.Unix(event.Check.GetExecuted(), 0),
@@ -224,8 +224,8 @@ func getTemplateNew(event *types.Event) string {
 		emoji,
 		getSortedHistory(event),
 		formattedEventAction(event),
-    formattedMessage(event),
-    staticImageBucket
+		formattedMessage(event),
+		staticImageBucket,
 	}
 
 	err := card.Execute(&tpl, localStruct)
