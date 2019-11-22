@@ -8,13 +8,19 @@ install:
 # - go get github.com/kisielk/errcheck
 # - go get github.com/golang/dep/cmd/dep
 # - dep ensure
+- go get -v github.com/codeclimate/test-reporter
+
+before_script:
+  - test-reporter before-build
+  - echo "REPO $TRAVIS_REPO_SLUG TAG ${TRAVIS_TAG}"
+
 script:
 # - gometalinter.v1 --vendor --disable-all --enable=vet --enable=ineffassign
 #   --enable=goconst --tests ./...
-- go test -v -race ./...
+- go test -v -race ./... -coverprofile c.out
 
-before_script:
-- echo "REPO $TRAVIS_REPO_SLUG TAG ${TRAVIS_TAG}"
+after_script:
+  - test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 deploy:
   - #goreleaser
@@ -32,4 +38,4 @@ after_deploy:
 
 env:
   global:
-  - secure: xxxxx
+  - secure: "xxxxx"
