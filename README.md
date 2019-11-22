@@ -11,7 +11,8 @@ Download the latest version of the sensu-webex-handler from [releases][2],
 or create an executable script from this source.
 
 From the local path of the webex-handler repository:
-```
+
+```go
 go build -o /usr/local/bin/sensu-webex-handler main.go template.go
 ```
 
@@ -70,7 +71,7 @@ Example Sensu Go check definition:
 
 Help:
 
-```
+```shell
 The Sensu Go Webex Teams handler for event forwarding
 
 Usage:
