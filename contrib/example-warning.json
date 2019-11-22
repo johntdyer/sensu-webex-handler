@@ -64,20 +64,9 @@
     }
   },
   "check": {
-    "check_hooks": null,
-    "duration": 1.903135228,
-    "executed": 1522100915,
-    "high_flap_threshold": 0,
-    "history": [{
-        "executed": 1522100315
-      },
-      {
-        "executed": 1522100915
-      }
-    ],
     "command": "http_check.sh http://localhost:80",
     "handlers": [
-      "slack"
+      "webex-teams"
     ],
     "high_flap_threshold": 0,
     "interval": 20,

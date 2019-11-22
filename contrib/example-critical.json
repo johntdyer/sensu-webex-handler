@@ -68,7 +68,7 @@
     "high_flap_threshold": 0,
     "command": "http_check.sh http://localhost:80",
     "handlers": [
-      "slack"
+      "webex-team"
     ],
     "interval": 20,
     "low_flap_theshold": 0,
