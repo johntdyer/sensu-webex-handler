@@ -6,7 +6,7 @@
 ![GitHub forks](https://img.shields.io/github/forks/johntdyer/sensu-webex-handler)
 ![GitHub stars](https://img.shields.io/github/stars/johntdyer/sensu-webex-handler)
 ![GitHub license](https://img.shields.io/github/license/johntdyer/sensu-webex-handler)
-[![Coverage Status](https://coveralls.io/repos/github/johntdyer/sensu-webex-handler/badge.svg?branch=use-cards)](https://coveralls.io/github/johntdyer/sensu-webex-handler?branch=use-cards)
+[![codecov](https://codecov.io/gh/johntdyer/sensu-webex-handler/branch/master/graph/badge.svg)](https://codecov.io/gh/johntdyer/sensu-webex-handler)
 
 The Sensu webex handler is a [Sensu Event Handler][1] that sends event data to
 a configured webex channel.   This plugin was mostly copied from the [Sensu slack handler][2] and repurposed for [Webex Teams][4].
