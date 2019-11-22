@@ -1,15 +1,17 @@
 language: go
 go:
 - 1.13.x
-install:
-- go get golang.org/x/tools/cmd/cover
-- go get github.com/mattn/goveralls
+install: true
+
 before_script:
 - echo "REPO $TRAVIS_REPO_SLUG TAG ${TRAVIS_TAG}"
+
 script:
-- go test -v -covermode=count -coverprofile=coverage.out
-- "$HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken
-  $COVERALLS_TOKEN"
+- go test -race -coverprofile=coverage.txt -covermode=atomic
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
 deploy:
 - provider: script
   script: curl -sL https://git.io/goreleaser | bash
@@ -22,6 +24,3 @@ after_deploy:
 - bonsai/generate-sha512sum.sh
 - bonsai/github-release-upload.sh github_api_token=$GITHUB_TOKEN repo_slug="$TRAVIS_REPO_SLUG"
   tag="${TRAVIS_TAG}" filename="dist/$(cat dist/sha512_file)"
-# env:
-#   global:
-#     secure: Yv/31g72WOJPlZAULxBYBAMI3fYN/7ElNhRN3gExbNEgwxaR5t6WKeaG2R6KSsRRk62R7eYgc9GcV54GBq55Yb3z//D1La2Nx0BH5r071NkmyXslXkpdAcQ7etQ3/aSfvHyQbTdQAyhaUlZla/vw7cMT1FJ4NsQIr3pPx4GKGRDN6y/5AsqzDuGnv5uyh4IFAN6/UOk7V0V8JnWdofAC+J0BXSQL1UwrJGCGa+bx0OJPh3geGVl9T9Fal3kxvMmrf5CWQ8M/An0A1iWRuhvDCmn39eA74KBQ6pNfNSt+b3zBcyf8qxlj2oDTNdsQTMiGzpD1Kak92/hKp4G98xZpVyyRlDs/v3lPVCtboe1XLzsaoFGZX0CpPwZlP32VL+z7RfGtIuNXhvr/1CswQJ8Ff+U15W9zz7qbwaDaJeYRhbTBS2wmWWvyfDUHKXhCQJyd98jZvM/X0qAB7MkKOWz9kNv4cggDVVuwSR1uU12iFbCLmbeON3muXsKB/izftTfos6Z16k2gxHsDW63WLYxAjBXKQRI6S94uANxELy1/33B8nGw87pVrBCbxIMbSzwxP7P1jUZo/dmsagLp19KYZ7c6z9Dl4hFD+0xFH1sXVrGlMMt2tWhdCIWK8oX8pA1y1mI6TremWJyYTg1+rep2WnCOwxPH3EsySc0qMQTBAZOc=
