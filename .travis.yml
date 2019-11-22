@@ -5,7 +5,6 @@ install:
 - go get golang.org/x/tools/cmd/cover
 - go get github.com/mattn/goveralls
 before_script:
-- test-reporter before-build
 - echo "REPO $TRAVIS_REPO_SLUG TAG ${TRAVIS_TAG}"
 script:
 - go test -v -covermode=count -coverprofile=coverage.out
