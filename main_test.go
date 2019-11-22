@@ -67,38 +67,33 @@ func TestFormattedMessage(t *testing.T) {
 	assert.Equal("ALERT - entity1/check1:disk is full", formattedMsg)
 }
 
-func TestMessageColor(t *testing.T) {
+func TestStateToEmojifier(t *testing.T) {
 	assert := assert.New(t)
 	event := types.FixtureEvent("entity1", "check1")
 
 	event.Check.Status = 0
-	color := messageColor(event)
+	color, state, icon, _ := stateToEmojifier(event)
 	assert.Equal("success", color)
+	assert.Equal("Resolved", state)
+	assert.Equal("✅", icon)
 
 	event.Check.Status = 1
-	color = messageColor(event)
+	color, state, icon, _ = stateToEmojifier(event)
 	assert.Equal("warning", color)
+	assert.Equal("Warning", state)
+	assert.Equal("️⚠️", icon)
 
 	event.Check.Status = 2
-	color = messageColor(event)
+	color, state, icon, _ = stateToEmojifier(event)
 	assert.Equal("danger", color)
-}
+	assert.Equal("Critical", state)
+	assert.Equal("🚨", icon)
 
-func TestMessageStatus(t *testing.T) {
-	assert := assert.New(t)
-	event := types.FixtureEvent("entity1", "check1")
-
-	event.Check.Status = 0
-	status := messageStatus(event)
-	assert.Equal("Resolved", status)
-
-	event.Check.Status = 1
-	status = messageStatus(event)
-	assert.Equal("Warning", status)
-
-	event.Check.Status = 2
-	status = messageStatus(event)
-	assert.Equal("Critical", status)
+	event.Check.Status = 33
+	color, state, icon, _ = stateToEmojifier(event)
+	assert.Equal("unknown", color)
+	assert.Equal("Unknown", state)
+	assert.Equal("⁉️", icon)
 }
 
 func TestMain(t *testing.T) {

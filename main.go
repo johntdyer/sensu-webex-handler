@@ -14,16 +14,15 @@ import (
 	"unicode"
 
 	"github.com/alecthomas/template"
-	webexteams "github.com/jbogarin/go-cisco-webex-teams/sdk"
 	"github.com/sensu/sensu-go/types"
 	"github.com/spf13/cobra"
 	resty "gopkg.in/resty.v1"
 )
 
 var (
-	roomID string
-
-	token string
+	roomID            string
+	staticImageBucket = "https://webex-teams-static-image-store.s3.us-east-2.amazonaws.com"
+	token             string
 
 	timeout int
 	stdin   *os.File
@@ -124,28 +123,6 @@ func formattedMessage(event *types.Event) string {
 	return fmt.Sprintf("%s - %s", formattedEventAction(event), eventSummary(event, 100))
 }
 
-func messageColor(event *types.Event) string {
-	switch event.Check.Status {
-	case 0:
-		return "success"
-	case 2:
-		return "danger"
-	default:
-		return "warning"
-	}
-}
-
-func messageStatus(event *types.Event) string {
-	switch event.Check.Status {
-	case 0:
-		return "Resolved"
-	case 2:
-		return "Critical"
-	default:
-		return "Warning"
-	}
-}
-
 // stringMinifier remove whitespace before sending message to teams
 func stringMinifier(in string) (out string) {
 	white := false
@@ -163,16 +140,16 @@ func stringMinifier(in string) (out string) {
 	return
 }
 
-func stateToEmojifier(event *types.Event) (string, string, uint32) {
+func stateToEmojifier(event *types.Event) (string, string, string, uint32) {
 	switch event.Check.Status {
 	case 0:
-		return "success", "✅", event.Check.Status
+		return "success", "Resolved", "✅", event.Check.Status
 	case 2:
-		return "danger", "🚨", event.Check.Status
+		return "danger", "Critical", "🚨", event.Check.Status
 	case 1:
-		return "warning", "️⚠️", event.Check.Status
+		return "warning", "Warning", "️⚠️", event.Check.Status
 	default:
-		return "unknown", "⁉️", event.Check.Status
+		return "unknown", "Unknown", "⁉️", event.Check.Status
 	}
 }
 
@@ -203,48 +180,55 @@ func parseTime(input time.Time) string {
 	return input.Format("Monday 01/02/2006 - 15:04:05 MST")
 }
 
-func getTemplateNew(condition string, event *types.Event) string {
+func getTemplateNew(event *types.Event) string {
 
 	templateWithoutNewlines := stringMinifier(inccidentTemplate)
 
-	t := template.Must(template.New("inccident").Funcs(template.FuncMap{
+	card := template.Must(template.New("inccident").Funcs(template.FuncMap{
 		"parseTime": parseTime,
 	}).Parse(templateWithoutNewlines))
 
 	var tpl bytes.Buffer
 
-	eventColor, emoji, _ := stateToEmojifier(event)
+	eventColor, emoji, eventState, _ := stateToEmojifier(event)
 
-	// fmt.Println(getSortedHistory(event))
-	// history := []types.CheckHistory{}
+	var messageTarget string
 
-	// fmt.Printf("%# v", pretty.Formatter(event))
+	if strings.Contains(roomID, "@") {
+		messageTarget = fmt.Sprintf("\"toPersonEmail\":\"%s\",", roomID)
+	} else {
+		messageTarget = fmt.Sprintf("\"roomId\":\"%s\",", roomID)
+	}
 
 	localStruct := struct {
 		CheckOutput          string
 		CheckExecutionTime   time.Time
 		MessageColor         string
 		MessageStatus        string
+		MessageTarget        string
 		EntityName           string
 		CheckName            string
 		Emoji                string
 		History              []string
 		FormattedEventAction string
-		FormattedMessage     string
+    FormattedMessage     string
+    BucketName           string
 	}{
 		event.Check.GetOutput(),
 		time.Unix(event.Check.GetExecuted(), 0),
-		eventColor, //messageColor(event),
-		messageStatus(event),
+		eventColor,
+		eventState,
+		messageTarget,
 		event.Entity.Name,
 		event.Check.GetObjectMeta().Name,
 		emoji,
 		getSortedHistory(event),
 		formattedEventAction(event),
-		formattedMessage(event),
+    formattedMessage(event),
+    staticImageBucket
 	}
 
-	err := t.Execute(&tpl, localStruct)
+	err := card.Execute(&tpl, localStruct)
 	if err != nil {
 		panic(err)
 	}
@@ -253,47 +237,19 @@ func getTemplateNew(condition string, event *types.Event) string {
 
 }
 
-// Define a template.
-const inccidentTemplate = `
-<blockquote class='{{.MessageColor}}'> {{.Emoji}} {{.MessageStatus}} <br/>
-<b>Check Name:</b> {{.CheckName}} 
-{{if (ne .MessageStatus "Resolved") }}
-&nbsp;&nbsp;&nbsp;&nbsp; <b>Execution Time:</b> {{.CheckExecutionTime}} <br/>
-{{end}}
-<b>Entity:</b> {{.EntityName}}      <br/>
-{{if (ne .MessageStatus "Resolved") }}
-<b>Check output:</b> {{.CheckOutput}} <br/>
-<b>History:</b> {{.History}} <br/>
-{{end}}
-</blockquote>
-`
-
 func sendMessage(event *types.Event) error {
 
-	client := resty.New()
+	template := getTemplateNew(event)
 
-	client.SetAuthToken(token)
-	Client := webexteams.NewClient(client)
+	_, err := resty.R().
+		SetHeader("Content-Type", "application/json").
+		SetBody(template).
+		SetAuthToken(token).
+		Post("https://api.ciscospark.com/v1/messages")
 
-	template := getTemplateNew(messageStatus(event), event)
-
-	markDownMessage := &webexteams.MessageCreateRequest{
-		Markdown: template,
-	}
-
-	// If room id contains an @ we assume email address and use that
-	if strings.Contains(roomID, "@") {
-		markDownMessage.ToPersonEmail = roomID
-
-	} else {
-		markDownMessage.RoomID = roomID
-	}
-
-	newMarkDownMessage, _, err := Client.Messages.CreateMessage(markDownMessage)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("POST:", newMarkDownMessage.ID, newMarkDownMessage.Markdown, newMarkDownMessage.Created)
 
 	return nil
 }
