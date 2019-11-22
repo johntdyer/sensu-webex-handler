@@ -3,7 +3,7 @@
 The Sensu webex handler is a [Sensu Event Handler][1] that sends event data to
 a configured webex channel.   This plugin was mostly copied from the [Sensu slack handler][2] and repurposed for [Webex Teams][4].
 
-![screenshot](images/example.png?raw=true "Example")
+![screenshot](images/card-example.png?raw=true "Example")
 
 ## Installation
 
@@ -12,7 +12,7 @@ or create an executable script from this source.
 
 From the local path of the webex-handler repository:
 ```
-go build -o /usr/local/bin/sensu-webex-handler main.go
+go build -o /usr/local/bin/sensu-webex-handler main.go template.go
 ```
 
 ## Configuration
@@ -31,7 +31,7 @@ webex-handler.json
     },
     "spec": {
         "type": "pipe",
-        "command": "sensu-webex-handler --token abc123 --room-id 'ABCDEFGHIJKLMNOP123' --timeout 20 \\",
+        "command": "sensu-webex-handler --api-key abc123 --room-id 'ABCDEFGHIJKLMNOP123' \\",
         "timeout": 30,
         "filters": [
             "is_incident"
@@ -71,17 +71,17 @@ Example Sensu Go check definition:
 Help:
 
 ```
-The Sensu Go webex handler for notifying a channel
+The Sensu Go Webex Teams handler for event forwarding
 
 Usage:
-  sensu-webex-handler [flags]
+  sensu-webex-teams-handler [flags]
 
 Flags:
-  -c, --room-id string       The space to post messages to, can also be a users email if you want to send directly to a person vs a space
-  -t, --token string         Api token to use
-  -h, --help                 help for handler-webex
-  -t, --timeout int          The amount of seconds to wait before terminating the handler (default 10)
-  
+  -k, --api-key string   API key for authenticated access
+  -a, --api-url string   Webex Teams API (default "api.ciscospark.com")
+  -h, --help             help for sensu-webex-teams-handler
+  -r, --room-id string   Room or email to send alert to
+
 ```
 
 [1]: https://docs.sensu.io/sensu-go/5.0/reference/handlers/#how-do-sensu-handlers-work
