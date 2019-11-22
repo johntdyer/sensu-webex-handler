@@ -3,7 +3,7 @@ builds:
   - # First Build
     env:
     - CGO_ENABLED=0
-    main: main.go
+    main: main.go template.go
     # Set the binary output location to bin/ so archive will comply with Sensu Go Asset structure
     binary: bin/{{ .ProjectName }}
     goos:
@@ -27,17 +27,19 @@ builds:
       - goos: freebsd
         goarch: arm
 
+
 checksum:
   # You can change the name of the checksums file.
   # Default is `{{ .ProjectName }}_{{ .Version }}_checksums.txt`.
   name_template: "{{ .ProjectName }}_{{ .Version }}_sha512-checksums.txt"
 
 archive:
-  format: tar.gz
-  files:
-    - LICENSE
-    - README.md
-    - CHANGELOG.md
+  - id: default
+    format: tar.gz
+    files:
+      - LICENSE
+      - README.md
+      - CHANGELOG.md
 
   # You can change the name of the GitHub release.
   # This is parsed with the Go template engine and the following variables
