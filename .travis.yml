@@ -2,40 +2,27 @@ language: go
 go:
 - 1.13.x
 install:
-# - go get gopkg.in/alecthomas/gometalinter.v1
-# - go get github.com/gordonklaus/ineffassign
-# - go get github.com/jgautheron/goconst/cmd/goconst
-# - go get github.com/kisielk/errcheck
-# - go get github.com/golang/dep/cmd/dep
-# - dep ensure
-- go get -v github.com/codeclimate/test-reporter
-
+- go get golang.org/x/tools/cmd/cover
+- go get github.com/mattn/goveralls
 before_script:
-  - test-reporter before-build
-  - echo "REPO $TRAVIS_REPO_SLUG TAG ${TRAVIS_TAG}"
-
+- test-reporter before-build
+- echo "REPO $TRAVIS_REPO_SLUG TAG ${TRAVIS_TAG}"
 script:
-# - gometalinter.v1 --vendor --disable-all --enable=vet --enable=ineffassign
-#   --enable=goconst --tests ./...
-- go test -v -race ./... -coverprofile c.out
-
-after_script:
-  - test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
-
+- go test -v -covermode=count -coverprofile=coverage.out
+- "$HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken
+  $COVERALLS_TOKEN"
 deploy:
-  - #goreleaser
-    provider: script
-    script: curl -sL https://git.io/goreleaser | bash
-    skip_cleanup: true
-    on:
-      tags: true
-      condition: $TRAVIS_OS_NAME = linux
-
+- provider: script
+  script: curl -sL https://git.io/goreleaser | bash
+  skip_cleanup: true
+  on:
+    tags: true
+    condition: "$TRAVIS_OS_NAME = linux"
 after_deploy:
-  - git clone https://github.com/sensu/sensu-go-bonsai-asset.git bonsai
-  - bonsai/generate-sha512sum.sh
-  - bonsai/github-release-upload.sh github_api_token=$GITHUB_TOKEN repo_slug="$TRAVIS_REPO_SLUG" tag="${TRAVIS_TAG}" filename="dist/$(cat dist/sha512_file)"
-
+- git clone https://github.com/sensu/sensu-go-bonsai-asset.git bonsai
+- bonsai/generate-sha512sum.sh
+- bonsai/github-release-upload.sh github_api_token=$GITHUB_TOKEN repo_slug="$TRAVIS_REPO_SLUG"
+  tag="${TRAVIS_TAG}" filename="dist/$(cat dist/sha512_file)"
 env:
   global:
-  - secure: "xxxxx"
+  - secure: WoK3mio8lyL7CYYBf/X0WRK09mL/1WKttr1Y94kAXr6JdnJmB8SpMP56R3pIaqY9rQhgRHzuAkPx8m4fGLLYBgYCX0n2heyvrPpzAe267scEm7BYWa7DkdmZW5oGwxji71So2efLR3RwFiJDaI9G8hEwyRi9Jkv4MZUy/RIBLpyb2QoNBDmg9cPlBh72j4MzVfsdhxHLvEDhCpvPuqHDW5hANJHqOiaUKnZX2fAoS2zva+TgGlDkhWXRvqlYarQntq1LQ1IrOTQUx6LHT2BCiDz7KXkZiuM8HQ470Uhv6XueeTzpak9kg44hA5NbFmuH8AGJddOXwWevjSvO4T4dah0g8tuU+x5WLTNzfVao+JC3M/V9JAz2/+IQQPl3RngEMGMTZY8ANOCqjpoNBXxw8SB88ZMq42u7N7FretEMyg6LBIkAWyN5jPo0AmTnQYvnoG2vMkWT1e8auyB2mml15ScIL1piDfI4WxPF+JMypXy1bDZ0Jhd31mqUZAtab9e6jPoQD392LtsMzECRHnFxafwKXzbbWxs8bi1BP/DnFS2wYfEki/W1GwT3zIOfqXyl0bQz8pKdVU62YTlqjh6Zs2q+A49vN0RIEfZnscAp1g5s/Iv7cz9GnlreEgXJxUpvoltvzBbksdw16w/QLmloKvbAgVhnUbFsWsS4NJwaMOA=

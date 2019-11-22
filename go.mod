@@ -12,6 +12,7 @@ require (
 	github.com/golang/protobuf v1.3.1
 	github.com/google/gofuzz v1.0.0 // indirect
 	github.com/json-iterator/go v0.0.0-20171115153421-f7279a603ede
+	github.com/mattn/goveralls v0.0.4 // indirect
 	github.com/robfig/cron v1.0.1-0.20171101201047-2315d5715e36
 	github.com/sensu/sensu-go v0.0.0-20190508172758-32aea478ae74
 	github.com/sensu/sensu-plugins-go-library v0.0.0-20190807215741-0080e59982e6

@@ -1,9 +1,11 @@
-# Sensu Go webex Handler [![Build Status](https://travis-ci.com/johntdyer/sensu-webex-handler.svg?branch=master)](https://travis-ci.com/johntdyer/sensu-webex-handler)
+# Sensu Go webex Handler
 
-[[!GitHub issues](https://img.shields.io/github/issues/johntdyer/sensu-webex-handler)]
-[[!GitHub forks](https://img.shields.io/github/forks/johntdyer/sensu-webex-handler)]
-[[!GitHub stars](https://img.shields.io/github/stars/johntdyer/sensu-webex-handler)]
-[[!GitHub license](https://img.shields.io/github/license/johntdyer/sensu-webex-handler)]
+![Build Status](https://travis-ci.com/johntdyer/sensu-webex-handler.svg?branch=master)
+![Go Report Card](https://goreportcard.com/badge/github.com/johntdyer/sensu-webex-handler)
+![GitHub issues](https://img.shields.io/github/issues/johntdyer/sensu-webex-handler)
+![GitHub forks](https://img.shields.io/github/forks/johntdyer/sensu-webex-handler)
+![GitHub stars](https://img.shields.io/github/stars/johntdyer/sensu-webex-handler)
+![GitHub license](https://img.shields.io/github/license/johntdyer/sensu-webex-handler)
 
 The Sensu webex handler is a [Sensu Event Handler][1] that sends event data to
 a configured webex channel.   This plugin was mostly copied from the [Sensu slack handler][2] and repurposed for [Webex Teams][4].
