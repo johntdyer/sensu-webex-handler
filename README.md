@@ -1,9 +1,17 @@
 # Sensu Go webex Handler
+[![Bonsai Asset Badge](https://img.shields.io/badge/Sensu%20Go%20Webex%20Teams%20Handler-Download%20Me-brightgreen.svg?colorB=89C967&logo=sensu)](https://bonsai.sensu.io/assets/johntdyer/sensu-webex-handler)
+![Build Status](https://travis-ci.com/johntdyer/sensu-webex-handler.svg?branch=master)
+![Go Report Card](https://goreportcard.com/badge/github.com/johntdyer/sensu-webex-handler)
+![GitHub issues](https://img.shields.io/github/issues/johntdyer/sensu-webex-handler)
+![GitHub forks](https://img.shields.io/github/forks/johntdyer/sensu-webex-handler)
+![GitHub stars](https://img.shields.io/github/stars/johntdyer/sensu-webex-handler)
+![GitHub license](https://img.shields.io/github/license/johntdyer/sensu-webex-handler)
+[![Coverage Status](https://coveralls.io/repos/github/johntdyer/sensu-webex-handler/badge.svg?branch=use-cards)](https://coveralls.io/github/johntdyer/sensu-webex-handler?branch=use-cards)
 
 The Sensu webex handler is a [Sensu Event Handler][1] that sends event data to
 a configured webex channel.   This plugin was mostly copied from the [Sensu slack handler][2] and repurposed for [Webex Teams][4].
 
-![screenshot](images/example.png?raw=true "Example")
+![screenshot](images/cards-example.png?raw=true "Example")
 
 ## Installation
 
@@ -11,8 +19,9 @@ Download the latest version of the sensu-webex-handler from [releases][2],
 or create an executable script from this source.
 
 From the local path of the webex-handler repository:
-```
-go build -o /usr/local/bin/sensu-webex-handler main.go
+
+```go
+go build -o /usr/local/bin/sensu-webex-handler main.go template.go
 ```
 
 ## Configuration
@@ -31,7 +40,7 @@ webex-handler.json
     },
     "spec": {
         "type": "pipe",
-        "command": "sensu-webex-handler --token abc123 --room-id 'ABCDEFGHIJKLMNOP123' --timeout 20 \\",
+        "command": "sensu-webex-handler --api-key abc123 --room-id 'ABCDEFGHIJKLMNOP123' \\",
         "timeout": 30,
         "filters": [
             "is_incident"
@@ -70,18 +79,18 @@ Example Sensu Go check definition:
 
 Help:
 
-```
-The Sensu Go webex handler for notifying a channel
+```shell
+The Sensu Go Webex Teams handler for event forwarding
 
 Usage:
-  sensu-webex-handler [flags]
+  sensu-webex-teams-handler [flags]
 
 Flags:
-  -c, --room-id string       The space to post messages to, can also be a users email if you want to send directly to a person vs a space
-  -t, --token string         Api token to use
-  -h, --help                 help for handler-webex
-  -t, --timeout int          The amount of seconds to wait before terminating the handler (default 10)
-  
+  -k, --api-key string   API key for authenticated access
+  -a, --api-url string   Webex Teams API (default "api.ciscospark.com")
+  -h, --help             help for sensu-webex-teams-handler
+  -r, --room-id string   Room or email to send alert to
+
 ```
 
 [1]: https://docs.sensu.io/sensu-go/5.0/reference/handlers/#how-do-sensu-handlers-work

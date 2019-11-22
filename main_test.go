@@ -1,14 +1,10 @@
 package main
 
 import (
-	"encoding/json"
-	"io/ioutil"
-	"os"
 	"testing"
 
 	"github.com/sensu/sensu-go/types"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestFormattedEventAction(t *testing.T) {
@@ -67,63 +63,31 @@ func TestFormattedMessage(t *testing.T) {
 	assert.Equal("ALERT - entity1/check1:disk is full", formattedMsg)
 }
 
-func TestMessageColor(t *testing.T) {
+func TestStateToEmojifier(t *testing.T) {
 	assert := assert.New(t)
 	event := types.FixtureEvent("entity1", "check1")
 
 	event.Check.Status = 0
-	color := messageColor(event)
+	color, state, icon, _ := stateToEmojifier(event)
 	assert.Equal("success", color)
+	assert.Equal("Resolved", state)
+	assert.Equal("✅", icon)
 
 	event.Check.Status = 1
-	color = messageColor(event)
+	color, state, icon, _ = stateToEmojifier(event)
 	assert.Equal("warning", color)
+	assert.Equal("Warning", state)
+	assert.Equal("️⚠️", icon)
 
 	event.Check.Status = 2
-	color = messageColor(event)
+	color, state, icon, _ = stateToEmojifier(event)
 	assert.Equal("danger", color)
-}
+	assert.Equal("Critical", state)
+	assert.Equal("🚨", icon)
 
-func TestMessageStatus(t *testing.T) {
-	assert := assert.New(t)
-	event := types.FixtureEvent("entity1", "check1")
-
-	event.Check.Status = 0
-	status := messageStatus(event)
-	assert.Equal("Resolved", status)
-
-	event.Check.Status = 1
-	status = messageStatus(event)
-	assert.Equal("Warning", status)
-
-	event.Check.Status = 2
-	status = messageStatus(event)
-	assert.Equal("Critical", status)
-}
-
-func TestMain(t *testing.T) {
-	assert := assert.New(t)
-	file, _ := ioutil.TempFile(os.TempDir(), "sensu-handler-webex-")
-	defer func() {
-		_ = os.Remove(file.Name())
-	}()
-
-	event := types.FixtureEvent("entity1", "check1")
-	eventJSON, _ := json.Marshal(event)
-	_, err := file.WriteString(string(eventJSON))
-	require.NoError(t, err)
-	require.NoError(t, file.Sync())
-	_, err = file.Seek(0, 0)
-	require.NoError(t, err)
-	stdin = file
-
-	requestReceived := true
-
-	oldArgs := os.Args
-	os.Args = []string{"webex"} ///, "-w", apiStub.URL}
-	defer func() { os.Args = oldArgs }()
-
-	main()
-
-	assert.True(requestReceived)
+	event.Check.Status = 33
+	color, state, icon, _ = stateToEmojifier(event)
+	assert.Equal("unknown", color)
+	assert.Equal("Unknown", state)
+	assert.Equal("⁉️", icon)
 }

@@ -65,77 +65,66 @@
   },
   "check": {
     "check_hooks": null,
-    "duration": 1.903135228,
-    "executed": 1522100915,
     "high_flap_threshold": 0,
-    "history": [{
-        "executed": 1522100315
-      },
-      {
-        "executed": 1522100915
-      }
-    ],
     "command": "http_check.sh http://localhost:80",
     "handlers": [
       "slack"
     ],
-    "high_flap_threshold": 0,
     "interval": 20,
-    "low_flap_threshold": 0,
+    "low_flap_theshold": 0,
     "publish": true,
     "runtime_assets": [],
     "subscriptions": [
       "testing"
     ],
     "proxy_entity_name": "",
-    "check_hooks": null,
     "stdin": false,
     "ttl": 0,
     "timeout": 0,
     "duration": 0.010849143,
     "executed": 1542667666,
-    "history": [{
+    "history": [
+      {
         "status": 1,
         "executed": 1542667666
       },
       {
         "status": 0,
         "executed": 1522100915
-      }, {
+      },
+      {
         "status": 0,
         "executed": 1522300915
       },
-
       {
         "status": 0,
         "executed": 1522100915
-      }, {
+      },
+      {
         "status": 0,
         "executed": 1522300915
       },
-
-
       {
         "status": 0,
         "executed": 1522200915
-      }, {
+      },
+      {
         "status": 0,
         "executed": 1522300915
       },
-
-
       {
         "status": 0,
         "executed": 1522400915
-      }, {
+      },
+      {
         "status": 1,
         "executed": 1522500915
       },
-
       {
         "status": 0,
         "executed": 1522600915
-      }, {
+      },
+      {
         "status": 0,
         "executed": 1522700915
       }
