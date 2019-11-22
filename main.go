@@ -242,6 +242,9 @@ func getTemplateNew(event *corev2.Event) string {
 
 func sendMessage(event *corev2.Event) error {
 	client := resty.New()
+
+	validateEvent(event)
+
 	template := getTemplateNew(event)
 
 	client.

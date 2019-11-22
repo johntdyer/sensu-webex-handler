@@ -81,7 +81,8 @@ const inccidentTemplate = `{
                     "width": "stretch",
                     "items": [{
                       "type": "FactSet",
-                      "facts": [{
+                      "facts": [
+                        {
                           "title": "**Entity:** ",
                           "value": "[{{.EntityName}}](foo)"
                         }
@@ -130,7 +131,7 @@ const inccidentTemplate = `{
               }]
             }]
           }
-             {{end}}
+          {{end}}
         ]
       }
     }
