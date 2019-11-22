@@ -1,5 +1,5 @@
 # Sensu Go webex Handler
-
+[![Bonsai Asset Badge](https://img.shields.io/badge/Sensu%20Go%20Webex%20Teams%20Handler-Download%20Me-brightgreen.svg?colorB=89C967&logo=sensu)](https://bonsai.sensu.io/assets/johntdyer/sensu-webex-handler)
 ![Build Status](https://travis-ci.com/johntdyer/sensu-webex-handler.svg?branch=master)
 ![Go Report Card](https://goreportcard.com/badge/github.com/johntdyer/sensu-webex-handler)
 ![GitHub issues](https://img.shields.io/github/issues/johntdyer/sensu-webex-handler)
