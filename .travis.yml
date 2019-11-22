@@ -10,15 +10,13 @@ script:
 - go test -v -covermode=count -coverprofile=coverage.out
 - "$HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken
   $COVERALLS_TOKEN"
-
 deploy:
-  - provider: script
-    script: curl -sL https://git.io/goreleaser | bash
-    skip_cleanup: true
-    on:
-      tags: true
-      condition: $TRAVIS_OS_NAME = linux
-
+- provider: script
+  script: curl -sL https://git.io/goreleaser | bash
+  skip_cleanup: true
+  on:
+    tags: true
+    condition: "$TRAVIS_OS_NAME = linux"
 after_deploy:
 - git clone https://github.com/sensu/sensu-go-bonsai-asset.git bonsai
 - bonsai/generate-sha512sum.sh
@@ -26,4 +24,5 @@ after_deploy:
   tag="${TRAVIS_TAG}" filename="dist/$(cat dist/sha512_file)"
 env:
   global:
-    secure: HHojPu/bwQaclndHeqdCnCPkS9CGAxbZOsHXnQ9AirABWXRvKvhP9WDu3uX+vY7V9GImQgb7k9hPKS3DqsJLMP6Dpysj+p+LCiOPEhUqC7kj5SJhbV7xwJtKEvvkPzzwHAv0M+dUgDwdamPLvJyiWxQaHl0GiV01PtTf5JHXeUZU8/eyuMHo7N3TnYp9/DwxnfVLvSHiONGw4OzStfjscxiQ/FEeYf0yE0PSbArHxHWw9oLQHSS2cpQKL+6wpYOein8SBAx2J5Cqr2h1+0eNXU9E6ckTqNaKVm0KRgI0e7I1lugibJQeiuNEVuXdiM4QKBbh/mIBTTDXz26WquIPCQ77iMoU0VQas1VNgwPPauqz7RAuLT1DJQ6zlfrdhohCYhLAWCzeoHk9UYaIO2FC4fzzrX6AcgISJYpU6JfK39W8C1cF4Ew8+zXyspK/NXXrFvWSZzFZHC1sbNCwxu/CBpRFFsnUipSZk2CCJdd3GNfkdYb7xhQL0z0ZRh3lNgwNtHiTj/zMtf53cGLmDi/b3DIYjAJPRXYiFLnZ/KfMWRAI9P0/fqkMdMJKGz81c2mmQRoh84EBc/C92l1uPTFEFpX9HH4yW9ZHuTl/JsP7Aq6a2E53X3ooIlHQbhmBTmUkIs7HH+7hbWInqjeHq0oX+kFwANoshaGHRBOhyYNtiZI=
+  - secure: HHojPu/bwQaclndHeqdCnCPkS9CGAxbZOsHXnQ9AirABWXRvKvhP9WDu3uX+vY7V9GImQgb7k9hPKS3DqsJLMP6Dpysj+p+LCiOPEhUqC7kj5SJhbV7xwJtKEvvkPzzwHAv0M+dUgDwdamPLvJyiWxQaHl0GiV01PtTf5JHXeUZU8/eyuMHo7N3TnYp9/DwxnfVLvSHiONGw4OzStfjscxiQ/FEeYf0yE0PSbArHxHWw9oLQHSS2cpQKL+6wpYOein8SBAx2J5Cqr2h1+0eNXU9E6ckTqNaKVm0KRgI0e7I1lugibJQeiuNEVuXdiM4QKBbh/mIBTTDXz26WquIPCQ77iMoU0VQas1VNgwPPauqz7RAuLT1DJQ6zlfrdhohCYhLAWCzeoHk9UYaIO2FC4fzzrX6AcgISJYpU6JfK39W8C1cF4Ew8+zXyspK/NXXrFvWSZzFZHC1sbNCwxu/CBpRFFsnUipSZk2CCJdd3GNfkdYb7xhQL0z0ZRh3lNgwNtHiTj/zMtf53cGLmDi/b3DIYjAJPRXYiFLnZ/KfMWRAI9P0/fqkMdMJKGz81c2mmQRoh84EBc/C92l1uPTFEFpX9HH4yW9ZHuTl/JsP7Aq6a2E53X3ooIlHQbhmBTmUkIs7HH+7hbWInqjeHq0oX+kFwANoshaGHRBOhyYNtiZI=
+  - secure: RUE/iaLVNgvxC0xJlolxrd8EIbfShGZtWKuQj33W4yamtGMoYj1eoAgj02jDOAtKVFCHHLdKifzJ/Cc/NJleP3LeEeyVKXW5ha/ohJr/dsT0mrMgUtrlQZyxpTqQhVMunczEvOOiMD5hIPpb4lVWD22QIaSFYmHAWbpS2BSkKdRZWe3d5amlRICZ4dfkPp6UCgOE5E+SWF/A5YMr+W5TSmGNXLck/5bSIY5FsozW6wnM+eWF6W7qnVrVNbDbuBVqvpP09XNdMAQhQ6qk8DGm9zoEufewz7D8/mIeazzTfa1EHeY277aDd0NBRsoUVulXQ+YuL8W26EJlL66C5xHPg8X19INyGBarE99AWA7FdhDd1C16gfr2kr7voHXP5G4nMWSkBOB2ixLzYYk5t9oDrYusWO8g3hNinxVMF5obYwSmQSOmIiU9dqOwMNLJb2j0Hvxiyl2Tk6eHNJYfopHnM9uQ//bOadZwezdWRYox5isr3Pe1lH6RAjFvMxGtOJjpYJv8ua3feDqg7UwZ+U7ia+OpyukWgjaTr89AdFtDOiPVDS7Ac8HgZADpluIqSF0QfjTmAG6ueYoDS9cPDktM2nPTp7+7xGYojblrEQo/RXroZj7KpfW/W1GnPGrShAzeQXYMjlgBS77dTmuKPi8hK7wZbV/rGFbTMjyTyMtv818=
