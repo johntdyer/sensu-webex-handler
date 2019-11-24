@@ -30,10 +30,92 @@ func TestParseTime(t *testing.T) {
 	assert.Equal("2014-12-29 19:54:00 +0000 SGT", timeStamp.String())
 }
 
+// func TestCheck(t *testing.T) {
+// 	newCheck := corev2.FixtureCheck("check")
+// 	newCheck.History = []corev2.CheckHistory{
+// 		Status: 1,
+// 	}
+
+// 	assert := assert.New(t)
+// 	seed := time.Now().UnixNano()
+
+// 	popr := math_rand.New(math_rand.NewSource(seed))
+// 	p := corev2.NewPopulatedCheckHistory(popr, false)
+
+// 	// err := validateEvent(&corev2.Event{
+// 	// 	Timestamp: 11231231,
+
+// 	// 	Check: &corev2.Check{
+// 	// 		Output:  "This is a string w/ new line\n",
+// 	// 		History: [p],
+// 	// 	},
+// 	// })
+// 	assert.Nil(err)
+// }
+
 func TestValidateEvent(t *testing.T) {
 
 	assert := assert.New(t)
+
 	err := validateEvent(&corev2.Event{
+		Timestamp: 11231231,
+		Entity: &corev2.Entity{
+			EntityClass: "agent",
+			ObjectMeta: corev2.ObjectMeta{
+				Name:      "fp",
+				Namespace: "default",
+			},
+		},
+		Check: &corev2.Check{
+			ObjectMeta: corev2.ObjectMeta{
+				Name: "check-name",
+			},
+			Interval: 20,
+		},
+	})
+	assert.Nil(err)
+
+	assert.EqualError(validateEvent(&corev2.Event{}), "timestamp is missing or must be greater than zero")
+	assert.EqualError(validateEvent(&corev2.Event{
+		Timestamp: 11231231,
+	}), "entity is missing from event")
+
+	assert.EqualError(validateEvent(&corev2.Event{
+		Timestamp: 11231231,
+		Entity:    &corev2.Entity{},
+	}), "check is missing from event")
+
+	assert.EqualError(validateEvent(&corev2.Event{
+		Timestamp: 11231231,
+		Entity: &corev2.Entity{
+			ObjectMeta: corev2.ObjectMeta{
+				Name: "fp",
+			},
+		},
+		Check: &corev2.Check{},
+	}), "entity class must not be empty")
+
+	assert.EqualError(validateEvent(&corev2.Event{
+		Timestamp: 11231231,
+		Entity: &corev2.Entity{
+			EntityClass: "agent",
+			ObjectMeta: corev2.ObjectMeta{
+				Name:      "fp",
+				Namespace: "default",
+			},
+		},
+		Check: &corev2.Check{
+			ObjectMeta: corev2.ObjectMeta{
+				Name: "check-name",
+			},
+		},
+	}), "check interval must be greater than or equal to 1")
+
+}
+
+func TestCheckArgs(t *testing.T) {
+	assert := assert.New(t)
+	err := checkArgs(&corev2.Event{
 		Timestamp: 11231231,
 		Entity: &corev2.Entity{
 			EntityClass: "agent",
@@ -52,8 +134,10 @@ func TestValidateEvent(t *testing.T) {
 		},
 	})
 	assert.Nil(err)
-}
 
+	assert.EqualError(checkArgs(&corev2.Event{}), "event does not contain check")
+
+}
 func TestStringMinifier(t *testing.T) {
 	assert := assert.New(t)
 
