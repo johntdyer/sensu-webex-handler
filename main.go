@@ -284,6 +284,7 @@ func sendMessage(event *corev2.Event) error {
 }
 
 func validateEvent(event *corev2.Event) error {
+
 	if event.Timestamp <= 0 {
 		return errors.New("timestamp is missing or must be greater than zero")
 	}

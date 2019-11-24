@@ -2,11 +2,72 @@ package main
 
 import (
 	"testing"
+	"time"
 
+	corev2 "github.com/sensu/sensu-go/api/core/v2"
 	"github.com/sensu/sensu-go/types"
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	eventWithStatus = &corev2.Event{
+		Check: &corev2.Check{
+			Output: "This is a string w/ new line\n",
+			Status: 10,
+		},
+	}
+)
+
+func TestTrimSuffixCheckOutput(t *testing.T) {
+	assert := assert.New(t)
+	output := trimSuffixCheckOutput(eventWithStatus)
+	assert.Equal("This is a string w/ new line", output)
+}
+
+func TestParseTime(t *testing.T) {
+	assert := assert.New(t)
+	timeStamp, _ := time.Parse("Jan 2, 2006 at 3:04pm (MST)", "Dec 29, 2014 at 7:54pm (SGT)")
+	assert.Equal("2014-12-29 19:54:00 +0000 SGT", timeStamp.String())
+}
+
+func TestValidateEvent(t *testing.T) {
+
+	assert := assert.New(t)
+	err := validateEvent(&corev2.Event{
+		Timestamp: 11231231,
+		Entity: &corev2.Entity{
+			EntityClass: "agent",
+			ObjectMeta: corev2.ObjectMeta{
+				Name:      "fp",
+				Namespace: "default",
+			},
+		},
+		Check: &corev2.Check{
+			Output:   "This is a string w/ new line\n",
+			Status:   10,
+			Interval: 20,
+			ObjectMeta: corev2.ObjectMeta{
+				Name: "check-name",
+			},
+		},
+	})
+	assert.Nil(err)
+}
+
+func TestStringMinifier(t *testing.T) {
+	assert := assert.New(t)
+
+	input := `<blockquote class='blue'> foo bar <br/>
+      <b>Check Name:</b> foocheck
+      <b>Entity:</b> entity-nmame      <br/>
+      <b>Check output:</b>  this is output <br/>
+      <b>History:</b>  <br/>
+	</blockquote>`
+
+	output := stringMinifier(input)
+	assert.Equal(output, "<blockquote class='blue'> foo bar <br/> <b>Check Name:</b> foocheck <b>Entity:</b> entity-nmame <br/> <b>Check output:</b> this is output <br/> <b>History:</b> <br/> </blockquote>")
+
+}
 func TestFormattedEventAction(t *testing.T) {
 	assert := assert.New(t)
 	event := types.FixtureEvent("entity1", "check1")
