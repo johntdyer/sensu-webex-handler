@@ -1,4 +1,5 @@
 vendor/
+bonsai/
 coverage.txt
 coverage.out
 dist/
