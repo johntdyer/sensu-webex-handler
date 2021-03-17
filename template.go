@@ -46,7 +46,6 @@ const inccidentTemplate = `{
             }
             ],
             "spacing": "Medium",
-            "height": "stretch",
             "horizontalAlignment": "Left",
             "style": "default"
           },
@@ -103,8 +102,7 @@ const inccidentTemplate = `{
                 }]
               }
 
-            ],
-            "height": "stretch"
+            ]
           }
           {{if (ne .MessageStatus "Resolved") }}
           ,
@@ -123,7 +121,6 @@ const inccidentTemplate = `{
                     "wrap": true,
                     "color": "Attention",
                     "separator": true,
-                    "height": "stretch",
                     "horizontalAlignment": "Left",
                     "size": "Small"
                   }]
